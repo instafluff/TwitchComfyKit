@@ -1,0 +1,71 @@
+<h1 id="sandboxhelloworldsample">Sandbox: Hello World Sample</h1>
+
+<p>This sample code was downloaded from the Extensions Developer Sandbox(https://dev.twitch.tv/extensions/sandbox). You can use this sample code as the basis for testing an extension, or for personal use.</p>
+
+<h2 id="continuingsandboxdevelopmentintherig">Continuing sandbox development in the rig</h2>
+
+<p>This readme details how to use the <a href="https://github.com/twitchdev/developer-rig">Developer Rig</a> to continue development on your extension. You can read about how to get started with the project <a href="https://github.com/twitchdev/developer-rig#twitch-extensions-developer-rig">here</a>.</p>
+
+<p>Prerequisites:</p>
+
+<ul>
+<li>You have retrieved this sample code from the sandbox by selecting to download it within the UI.</li>
+
+<li>Developer Rig is installed locally and is running on your machine. Within the rig folder, run <code>yarn start</code>. The rig will be hosted on https://localhost.rig.twitch.tv:3000.</li>
+</ul>
+
+<p>These steps will assume downloaded code is at <code>/Users/twitch/Downloads/sandbox-extension-hello-world</code> and that the rig is located at <code>/Users/twitch/developer-rig</code>. Your paths will differ per your username and folder structures.</p>
+
+<ol>
+<li>In the rig running on your machine, create a new extension project.</li>
+</ol>
+
+<ul>
+<li>Extension Project Name: "Sandbox" (or whatever you like).
+— Choose Extension: Create Local Extension
+— Extension Types: Video Component, Panel</li>
+
+<li>Project Folder: /Users/twitch/Downloads/sandbox-extension-hello-world</li>
+
+<li>Add Code to Project: None (Just Create Project Folder)</li>
+</ul>
+
+<ol>
+<li>Click the + button to add a new Panel view.</li>
+</ol>
+
+<ul>
+<li>Extension Type: Panel</li>
+
+<li>Viewer Type: Logged-Out Viewer</li>
+</ul>
+
+<blockquote>
+  <p>Note: you can perform this same step for other extension views, such as components.</p>
+</blockquote>
+
+<ol>
+<li><p>Navigate to Project Overview tab. Set Front-end Files Location to <code>.</code>. Click Host with Rig.</p></li>
+
+<li><p>Navigate to Extension Views tab. You should see your extension!</p></li>
+</ol>
+
+<h2 id="differencesbetweensandboxandrig">Differences between sandbox and rig</h2>
+
+<p>You may notice that the HTML and Javascript downloaded differs from what was being edited. A few things were added to help the extension runs in the rig:</p>
+
+<ul>
+<li>A script html element referencing <code>viewer.js</code> to load your javascript.</li>
+
+<li>A link html element referencing <code>style.css</code> to load styles.</li>
+
+<li>A script element <code>&lt;script src="https://localhost.rig.twitch.tv:3000/twitch-ext.js"&gt;&lt;/script&gt;</code>. This is required for local extensions.</li>
+
+<li>Two html files named <code>panel.html</code> and <code>video_component.html</code>. These are the naming conventions for these views for local extensions.</li>
+
+<li>Javascript code was updated to contain <code>twitch.onAuthorized</code> if it wasn't included. This function is required by extensions to load properly.</li>
+</ul>
+
+<h2 id="getextensionssupportfromtwitchdevelopersandthecommunity">Get extensions support from Twitch Developers and the community</h2>
+
+<p>We’re here to help! Start a thread in the <a href="https://discuss.dev.twitch.tv">forums</a> or send us a <a href="https://twitter.com/twitchdev">tweet</a>.</p>

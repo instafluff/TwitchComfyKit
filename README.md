@@ -15,17 +15,35 @@ Thank you too all the participants of this project!
 
 ## Instructions ##
 
-https://glass.twitch.tv/extensions/sandbox
-
+### Getting Started ###
 1. Install NodeJS - [https://nodejs.org/en/](https://nodejs.org/en/)
 2. Open the directory in a Command Prompt/Terminal
 3. Install Dependencies: `npm install`
-4. Get a Twitch Chat OAuth Password Token - [http://twitchapps.com/tmi/](http://twitchapps.com/tmi/)
 4. Create a file named `.env` that looks like this:
 ```javascript
-PORT=8000
-TWITCHUSER=[YOUR-USERNAME-HERE]
-OAUTH=[YOUR-OAUTH-PASS HERE] # e.g. OAUTH=oauth:kjh12bn1hsj78445234
+PORT=8000 # You can change this to any port you wish
 ```
 5. Run Server: `npm start`
-6. View the webpage from your web browser! [http://localhost:8000](http://localhost:8000)
+6. View the extension from your web browser! [Panel: http://localhost:8000/panel.html](http://localhost:8000) [Video Component: http://localhost:8000/video_component.html](http://localhost:8000/video_component.html)
+7. Look at **comfykit.js** for how to get started with Twitch Extension functionality!
+
+### Extension Prototyping ###
+The easiest way to setup the elements and layout of your extension is via Twitch's Sandbox and then Download the code.
+1. Visually setup your extension via Sandbox: [https://glass.twitch.tv/extensions/sandbox](https://glass.twitch.tv/extensions/sandbox)
+2. Remove all starter code inside **viewer.js**
+3. Download the code
+4. Extract the zip into the **your_files** folder (overwrite the existing files)
+5. Add **comfykit.js** and replace the link to JQuery in your panel or video component to the Twitch extension URL like this:
+```javascript
+<script src="https://extension-files.twitch.tv/live-extensions/jquery.min.js"></script>
+<script src="comfykit.js"></script>
+```
+6. Look at **comfykit.js** for how to get started with Twitch Extension functionality!
+
+### Uploading to the Twitch Developer Dashboard ###
+To package your Extension project, simply run `npm run package` from the Command Prompt/Terminal and it will zip all files in the **your_files** folder into a file called **uploadthis.zip**. Each time you update your extension, you can package your code using this command.
+To upload to Twitch:
+1. Create the Twitch Extension project in the Dashboard: [https://dev.twitch.tv/dashboard](https://dev.twitch.tv/dashboard)
+2. Go to the Version tab and click Manage, then go to Version Assets
+3. Choose File and select the **uploadthis.zip** file and click Upload Assets
+4. Finally in Version Status, click Move to Hosted Test to make your Extension available in your Twitch Channel Dashboard (https://www.twitch.tv/[YOUR_USERNAME]/dashboard/extensions). You can install and add your uploaded Extension the same way you would add other extensions from this Dashboard page.

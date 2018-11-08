@@ -1,0 +1,22 @@
+body {
+    background-color: white;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+#color {
+    border-radius: 50px;
+    transition: background-color 0.5s ease;
+    margin-top: 30px;
+    width: 100px;
+    height: 100px;
+    background-color: #6441A4;
+    float: left;
+    position: relative;
+    left: -50%;
+}
+
+#color-container {
+    float: left;
+    position: relative;
+    left: 50%;
+}

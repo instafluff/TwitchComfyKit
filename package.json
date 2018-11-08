@@ -4,7 +4,9 @@
   "description": "Twitch Extensions Starter Kit",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node .",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "package": "node comfypackager.js"
   },
   "repository": {
     "type": "git",
@@ -16,7 +18,11 @@
     "url": "https://github.com/instafluff/TwitchComfyKit/issues"
   },
   "homepage": "https://github.com/instafluff/TwitchComfyKit#readme",
-  "devDependencies": {
-    "dotenv": "^6.1.0"
+  "devDependencies": {},
+  "dependencies": {
+    "archiver": "^3.0.0",
+    "connect": "^3.6.6",
+    "dotenv": "^6.1.0",
+    "serve-static": "^1.13.2"
   }
 }
