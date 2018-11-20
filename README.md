@@ -54,3 +54,6 @@ To upload to Twitch:
 2. Go to the Version tab and click Manage, then go to Version Assets
 3. Choose File and select the **uploadthis.zip** file and click Upload Assets
 4. Finally in Version Status, click Move to Hosted Test to make your Extension available in your Twitch Channel Dashboard (https://www.twitch.tv/[YOUR_USERNAME]/dashboard/extensions). You can install and add your uploaded Extension the same way you would add other extensions from this Dashboard page.
+
+## Twitch Extension FAQ ##
+How to Use Extensions Guide: [https://help.twitch.tv/customer/portal/articles/2861187-how-to-use-extensions](https://help.twitch.tv/customer/portal/articles/2861187-how-to-use-extensions)
