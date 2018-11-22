@@ -109,11 +109,15 @@ console.log( "Version:", version );
 
 // --- Twitch Ext Configurations ---
 // Configurations in format: {version: string, content: string}|undefined
-const configGlobal = twitch.configuration[ "global" ];
-const configDev = twitch.configuration[ "developer" ];
-const configChannel = twitch.configuration[ "broadcaster" ];
+var configGlobal = twitch.configuration[ "global" ];
+var configDev = twitch.configuration[ "developer" ];
+var configChannel = twitch.configuration[ "broadcaster" ];
 twitch.configuration.onChanged( function() {
   // Called when Ext Configuration is updated
+  console.log( "Configuration Updated" );
+  configGlobal = twitch.configuration[ "global" ];
+  configDev = twitch.configuration[ "developer" ];
+  configChannel = twitch.configuration[ "broadcaster" ];
 });
 console.log( "Global Config:", configGlobal );
 console.log( "Developer Config:", configDev );
@@ -122,6 +126,7 @@ console.log( "Channel Config:", configChannel );
 // "version" - 1.1.1 semantic string
 // "content" - string-encoded configuration
 function setChannelConfig( version, content ) {
+  console.log( "Updating Configuration:", version, content );
   twitch.configuration.set(
     "broadcaster", // This is the only valid value
     version,
