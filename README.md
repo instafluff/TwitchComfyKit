@@ -2,10 +2,11 @@
 We built this Twitch Extensions Starter Kit live on Twitch!
 
 ### Quickstart ###
-1. **your_files** contains the starter Extension files
-2. Edit **comfykit.js** for Extension-related functionality
-3. Run `npm run package` to zip and upload to the Developer Dashboard
-4. You made a Twitch Extension!
+1. Download this repository `git clone https://github.com/instafluff/TwitchComfyKit.git`
+2. **your_files** contains the starter Extension files
+3. Edit **comfykit.js** for Extension-related functionality
+4. Run `npm run package` to zip and upload to the Developer Dashboard
+5. You made a Twitch Extension!
 
 
 ## Instafluff ##
