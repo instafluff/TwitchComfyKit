@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "package": "node comfypackager.js"
+    "package": "node comfypackager.js",
+    "usernames": "node usernameToIds.js"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
     "archiver": "^3.0.0",
     "connect": "^3.6.6",
     "dotenv": "^6.1.0",
+    "request": "^2.88.0",
     "serve-static": "^1.13.2"
   }
 }
