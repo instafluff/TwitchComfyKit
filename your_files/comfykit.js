@@ -1,5 +1,60 @@
 var twitch = window.Twitch.ext;
 
+var comfyKit = {
+  onStart: ( channelInfo ) => {},
+  onAuthToken: ( auth ) => {},
+  onError: ( error ) => {},
+  onFullscreen: ( isFullscreen ) => {},
+  onMute: ( isMuted ) => {},
+  onPause: ( isPaused ) => {},
+  onVolume: ( volume ) => {},
+  onGameChanged: ( game ) => {},
+  onPosition: ( position ) => {},
+  onTheaterMode: ( isTheaterMode ) => {},
+  onLightDarkMode: ( mode ) => {},
+  onVideoResolution: ( resolution ) => {},
+  onHost: ( channelId ) => {},
+  onHover: ( isHovering ) => {},
+  onVisibility: ( isVisible ) => {},
+  onChannelConfig: ( config ) => {},
+  onGlobalConfig: ( config ) => {},
+  onDeveloperConfig: ( config ) => {},
+  RequestViewerIdentity: () => {
+    twitch.actions.requestIdShare();
+  },
+  Minimize: () => {
+    twitch.actions.minimize();
+  },
+  // Bits
+  GetBitsProducts: async ( callback ) => {
+    try {
+      var products = await twitch.bits.getProducts();
+      callback( products );
+    }
+    catch( err ) {
+      callback( [] );
+    }
+  },
+  ShowBitsBalance: () => {
+    twitch.bits.ShowBitsBalance();
+  },
+  UseBits: ( productId ) => {
+    twitch.bits.useBits( productId );
+  },
+  TestBits: ( productId ) => {
+    twitch.bits.setUseLoopback( true );
+    comfyKit.isTestBits = true;
+    twitch.bits.useBits( productId );
+  },
+  onBitsComplete: ( transaction ) => {},
+  onBitsCancelled: () => {},
+  // Channel Follow
+  FollowChannel: ( channel ) => { // TODO!!!
+    twitch.actions.followChannel( channel );
+  },
+  onFollowComplete: ( didFollow, channelName ) => {},
+};
+
 var userAuth = {
   channelId: "", // Channel ID of the page where the extension is iframe embedded
   clientId: "", // Client ID of the extension
@@ -145,6 +200,22 @@ twitch.features.onChanged( function( changed ) {
 console.log( "isChatEnabled:", isChatEnabled );
 
 
-
+twitch.actions.onFollow( function() {
+  comfyKit.onFollowComplete( didFollow, channelName );
+});
 
 // twitch.bits - Bits in Ext
+twitch.bits.onTransactionComplete( function( transaction ) {
+  if( comfyKit.isTestBits ) {
+    twitch.bits.setUseLoopback( false );
+    comfyKit.isTestBits = false;
+  }
+  // TODO: Verify JWT token
+  comfyKit.onBitsComplete( transaction );
+});
+
+twitch.bits.onTransactionCancelled( function() {
+  comfyKit.onBitsCancelled();
+});
+
+window.ComfyKit = comfyKit;
