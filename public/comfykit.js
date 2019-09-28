@@ -1,9 +1,11 @@
-var twitch = window.Twitch.ext;
+const ckTw = window.Twitch.ext;
 
 var comfyKit = {
   onStart: ( channelInfo ) => {},
   onAuthToken: ( auth ) => {},
-  onError: ( error ) => {},
+  onError: ( error ) => {
+    ckTw.rig.log( error );
+  },
   onFullscreen: ( isFullscreen ) => {},
   onMute: ( isMuted ) => {},
   onPause: ( isPaused ) => {},
@@ -20,15 +22,15 @@ var comfyKit = {
   onGlobalConfig: ( config ) => {},
   onDeveloperConfig: ( config ) => {},
   RequestViewerIdentity: () => {
-    twitch.actions.requestIdShare();
+    ckTw.actions.requestIdShare();
   },
   Minimize: () => {
-    twitch.actions.minimize();
+    ckTw.actions.minimize();
   },
   // Bits
   GetBitsProducts: async ( callback ) => {
     try {
-      var products = await twitch.bits.getProducts();
+      var products = await ckTw.bits.getProducts();
       callback( products );
     }
     catch( err ) {
@@ -36,21 +38,21 @@ var comfyKit = {
     }
   },
   ShowBitsBalance: () => {
-    twitch.bits.ShowBitsBalance();
+    ckTw.bits.ShowBitsBalance();
   },
   UseBits: ( productId ) => {
-    twitch.bits.useBits( productId );
+    ckTw.bits.useBits( productId );
   },
   TestBits: ( productId ) => {
-    twitch.bits.setUseLoopback( true );
+    ckTw.bits.setUseLoopback( true );
     comfyKit.isTestBits = true;
-    twitch.bits.useBits( productId );
+    ckTw.bits.useBits( productId );
   },
   onBitsComplete: ( transaction ) => {},
   onBitsCancelled: () => {},
   // Channel Follow
-  FollowChannel: ( channel ) => { // TODO!!!
-    twitch.actions.followChannel( channel );
+  FollowChannel: ( channel ) => {
+    ckTw.actions.followChannel( channel );
   },
   onFollowComplete: ( didFollow, channelName ) => {},
 };
@@ -64,30 +66,36 @@ var userAuth = {
 };
 var channelInfo = {};
 
-twitch.onAuthorized(function(auth) {
+var isFirstAuth = true;
+ckTw.onAuthorized(function(auth) {
   // This callback is fired each time the JWT is refreshed.
   userAuth = auth;
-  console.log( "The JWT that will be passed to the EBS is", auth.token );
-  console.log( "The channel ID is", auth.channelId );
   // WARNING: logging this object is not recommended in production
+  // console.log( "The JWT that will be passed to the EBS is", auth.token );
+  // console.log( "The channel ID is", auth.channelId );
   // console.log( "UserAuth:", userAuth );
 
-  // Retrieve info about the stream
-  if( userAuth[ "clientId" ] ) {
-    $.ajax({
-      url: "https://api.twitch.tv/helix/users?id=" + userAuth[ "channelId" ],
-      type: "GET",
-      headers: {
-        "Client-ID": userAuth[ "clientId" ]
-      },
-      success: function( result ) {
-        if( result[ "data" ].length > 0 ) {
-          channelInfo = result[ "data" ][ 0 ];
-          console.log( "Channel:", channelInfo );
+  if( isFirstAuth ) {
+    // Retrieve info about the stream
+    if( userAuth[ "clientId" ] ) {
+      $.ajax({
+        url: "https://api.twitch.tv/helix/users?id=" + userAuth[ "channelId" ],
+        type: "GET",
+        headers: {
+          "Client-ID": userAuth[ "clientId" ]
+        },
+        success: function( result ) {
+          if( result[ "data" ].length > 0 ) {
+            channelInfo = result[ "data" ][ 0 ];
+            console.log( "Channel:", channelInfo );
+          }
+          comfyKit.onStart( channelInfo );
         }
-      }
-    });
+      });
+    }
   }
+
+  comfyKit.onAuthToken( userAuth );
 
   // Calls to your custom server can use the JWT token like this:
   // var EBSPath = "/YourServerURL"; // URL Endpoint to your custom "Extension Backend Service" if you set up your own backend server
@@ -123,56 +131,93 @@ var userContext = {
   volume: 1, // Currently selected player volume between 0 and 1
 };
 
-twitch.onContext(function(context, props) {
+ckTw.onContext( function( context, props ) {
   // "props" contains an array of strings naming the context properties that were changed.
   userContext = context;
   console.log( "Context:", userContext );
+  if( props.contains( "isFullscreen" ) ) {
+    comfyKit.onFullscreen( context[ "isFullscreen" ] );
+  }
+  if( props.contains( "isMuted" ) ) {
+    comfyKit.onMute( context[ "isMuted" ] );
+  }
+  if( props.contains( "isPaused" ) ) {
+    comfyKit.onPause( context[ "isPaused" ] );
+  }
+  if( props.contains( "volume" ) ) {
+    comfyKit.onVolume( context[ "volume" ] );
+  }
+  if( props.contains( "game" ) ) {
+    comfyKit.onGameChanged( context[ "game" ] );
+  }
+  if( props.contains( "isTheatreMode" ) ) {
+    comfyKit.onTheaterMode( context[ "isTheatreMode" ] );
+  }
+  if( props.contains( "theme" ) ) {
+    comfyKit.onLightDarkMode( context[ "theme" ] );
+  }
+  if( props.contains( "videoResolution" ) ) {
+    comfyKit.onVideoResolution( context[ "videoResolution" ] );
+  }
+  if( props.contains( "hostingInfo" ) ) {
+    comfyKit.onHost( context[ "hostingInfo" ].hostedChannelId );
+  }
+  if( props.contains( "videoResolution" ) ) {
+    comfyKit.onVideoResolution( context[ "videoResolution" ] );
+  }
 });
 
-twitch.onError(function(error) {
+ckTw.onError( function( error ) {
   console.error( "Extension Error:", error );
+  comfyKit.onError( error );
 });
 
-twitch.onHighlightChanged(function(isHighlighted) {
+ckTw.onHighlightChanged( function( isHighlighted ) {
   console.log( "Extension hover highlight:", isHighlighted );
   // TODO: Implement this!
+  comfyKit.onHover( isHighlighted );
 });
 
-twitch.onPositionChanged(function(position) {
+ckTw.onPositionChanged(function( position ) {
   console.log( "Extension position in % from the top-left:", position.x / 100.0, position.y  / 100.0 );
+  comfyKit.onPosition( position );
 });
 
 // Required and only applies to for Mobile extensions
-twitch.onVisibilityChanged(function(isVisible, context) {
+ckTw.onVisibilityChanged( function( isVisible, context ) {
   console.log( "Extension visibility:", isVisible );
+  comfyKit.onVisibility( isVisible );
 });
 
 // --- Available Actions ---
-// twitch.actions.requestIdShare(); // opens a prompt for users to share their identity
-// twitch.actions.minimize(); // causes your video-component or video-overlay extension to be minimized
-// twitch.actions.onFollow(function(didFollow, channelName) {
+// ckTw.actions.requestIdShare(); // opens a prompt for users to share their identity
+// ckTw.actions.minimize(); // causes your video-component or video-overlay extension to be minimized
+// ckTw.actions.onFollow(function(didFollow, channelName) {
 //
 // }); // invoked whenever a user completes an interaction prompted by the followChannel action
-// twitch.actions.followChannel("ChannelName"); // prompts users to follow the specified channel, with a dialog controlled by Twitch
+// ckTw.actions.followChannel("ChannelName"); // prompts users to follow the specified channel, with a dialog controlled by Twitch
 
 
 
-const environment = twitch.environment;
-const version = twitch.version;
+const environment = ckTw.environment;
+const version = ckTw.version;
 console.log( "Environment:", environment );
 console.log( "Version:", version );
 
 // --- Twitch Ext Configurations ---
 // Configurations in format: {version: string, content: string}|undefined
-var configGlobal = twitch.configuration[ "global" ];
-var configDev = twitch.configuration[ "developer" ];
-var configChannel = twitch.configuration[ "broadcaster" ];
-twitch.configuration.onChanged( function() {
+var configGlobal = ckTw.configuration[ "global" ];
+var configDev = ckTw.configuration[ "developer" ];
+var configChannel = ckTw.configuration[ "broadcaster" ];
+ckTw.configuration.onChanged( function() {
   // Called when Ext Configuration is updated
   console.log( "Configuration Updated" );
-  configGlobal = twitch.configuration[ "global" ];
-  configDev = twitch.configuration[ "developer" ];
-  configChannel = twitch.configuration[ "broadcaster" ];
+  configGlobal = ckTw.configuration[ "global" ];
+  configDev = ckTw.configuration[ "developer" ];
+  configChannel = ckTw.configuration[ "broadcaster" ];
+  comfyKit.onChannelConfig( configChannel );
+  comfyKit.onGlobalConfig( configGlobal );
+  comfyKit.onDeveloperConfig( configDev );
 });
 console.log( "Global Config:", configGlobal );
 console.log( "Developer Config:", configDev );
@@ -182,7 +227,7 @@ console.log( "Channel Config:", configChannel );
 // "content" - string-encoded configuration
 function setChannelConfig( version, content ) {
   console.log( "Updating Configuration:", version, content );
-  twitch.configuration.set(
+  ckTw.configuration.set(
     "broadcaster", // This is the only valid value
     version,
     content
@@ -192,29 +237,33 @@ function setChannelConfig( version, content ) {
 
 
 // --- Twitch Ext Feature Flags ---
-const isChatEnabled = twitch.features.isChatEnabled;
-twitch.features.onChanged( function( changed ) {
+const isChatEnabled = ckTw.features.isChatEnabled;
+ckTw.features.onChanged( function( changed ) {
   // Called when Ext Features is changed
   // "changed" is a string-array of feature flags
 });
 console.log( "isChatEnabled:", isChatEnabled );
 
 
-twitch.actions.onFollow( function() {
+ckTw.actions.onFollow( function() {
   comfyKit.onFollowComplete( didFollow, channelName );
 });
 
-// twitch.bits - Bits in Ext
-twitch.bits.onTransactionComplete( function( transaction ) {
+// ckTw.bits - Bits in Ext
+ckTw.bits.onTransactionComplete( function( transaction ) {
   if( comfyKit.isTestBits ) {
-    twitch.bits.setUseLoopback( false );
+    ckTw.bits.setUseLoopback( false );
     comfyKit.isTestBits = false;
   }
   // TODO: Verify JWT token
   comfyKit.onBitsComplete( transaction );
 });
 
-twitch.bits.onTransactionCancelled( function() {
+ckTw.bits.onTransactionCancelled( function() {
+  if( comfyKit.isTestBits ) {
+    ckTw.bits.setUseLoopback( false );
+    comfyKit.isTestBits = false;
+  }
   comfyKit.onBitsCancelled();
 });
 

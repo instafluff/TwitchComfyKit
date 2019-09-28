@@ -1,22 +1,10 @@
 # TwitchComfyKit
 We built this Twitch Extensions Starter Kit live on Twitch!
 
-### Quickstart With Dev Rig ###
-1. Download **comfykit.zip** from the `download_this` folder in this repository and extract into your project's folder
-2. Add **comfykit.js** and replace the link to JQuery to the Twitch extension URL in your `panel.html` (or `video_component.html` or `video_overlay.html`) and `config.html` in the `public` folder like this:
-```javascript
-<script src="jquery.min.js"></script>
-<script src="comfykit.js"></script>
-```
-3. Run `npm install archiver`
-4. Edit **viewer.js** (and **config.js** for configuration) for your Extension-related functionality and see it work in the Dev Rig's **Extension Views** tab
-5. When you're ready to publish, run `npm run package` to zip and upload to the Developer Dashboard
-6. You made a Twitch Extension!
-
-### Quickstart Without Dev Rig ###
+### Quickstart ###
 1. Download this repository `git clone https://github.com/instafluff/TwitchComfyKit.git`
-2. Run `npm install`
-3. Edit **comfykit.js** for Extension-related functionality (**public** contains the starter Extension files)
+2. **your_files** contains the starter Extension files
+3. Edit **comfykit.js** for Extension-related functionality
 4. Run `npm run package` to zip and upload to the Developer Dashboard
 5. You made a Twitch Extension!
 
@@ -56,16 +44,16 @@ The easiest way to setup the elements and layout of your extension is via Twitch
 1. Visually setup your extension via Sandbox: [https://glass.twitch.tv/extensions/sandbox](https://glass.twitch.tv/extensions/sandbox)
 2. Remove all starter code inside **viewer.js**
 3. Download the code
-4. Extract the zip into the **public** folder (overwrite the existing files)
+4. Extract the zip into the **your_files** folder (overwrite the existing files)
 5. Add **comfykit.js** and replace the link to JQuery in your panel or video component to the Twitch extension URL like this:
 ```javascript
-<script src="jquery.min.js"></script>
+<script src="https://extension-files.twitch.tv/live-extensions/jquery.min.js"></script>
 <script src="comfykit.js"></script>
 ```
 6. Look at **comfykit.js** for how to get started with Twitch Extension functionality!
 
 ### Uploading to the Twitch Developer Dashboard ###
-To package your Extension project, simply run `npm run package` from the Command Prompt/Terminal and it will zip all files in the **public** folder into a file called **uploadthis.zip**. Each time you update your extension, you can package your code using this command.
+To package your Extension project, simply run `npm run package` from the Command Prompt/Terminal and it will zip all files in the **your_files** folder into a file called **uploadthis.zip**. Each time you update your extension, you can package your code using this command.
 To upload to Twitch:
 1. Create the Twitch Extension project in the Dashboard: [https://dev.twitch.tv/dashboard](https://dev.twitch.tv/dashboard)
 2. Go to the Version tab and click Manage, then go to Version Assets
